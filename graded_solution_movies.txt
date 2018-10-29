@@ -1,0 +1,27 @@
+create external table IF NOT EXISTS movies(
+Movie string,
+Lead string,
+Release_date string,
+Total_collection float,
+Verdict string)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+LOCATION 's3://bollywoodmoviesdata/'
+tblproperties ("skip.header.line.count"="1");
+
+
+# 1. unique movies
+select count(distinct(movie)) from movies;
+
+# 2. number of appearances
+select lead, count(lead) as appearances
+from movies
+group by lead
+order by appearances desc
+limit 10;
+
+
+# 3. Average total collection
+select avg(total_collection) from movies;
+
+# 4. Average collection grouped by verdict
+SELECT verdict,avg(total_collection) FROM movies GROUP BY verdict;

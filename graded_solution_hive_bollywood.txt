@@ -1,0 +1,48 @@
+solution of Hive assignment:
+
+# 1. correlation between length and overall rating
+select corr(size(split(reviewtext, ' ')), overall)
+from electronics_columns_s3
+where year(from_unixtime(unixreviewtime)) = 2004
+and month(from_unixtime(unixreviewtime)) = 2
+## 0.06933060533133616
+
+
+
+# 2. correlation between length and relative helpfulness
+select corr(size(split(reviewtext, ' ')), cast((helpful[0])/(helpful[1]) as float))
+from electronics_columns_s3
+where year(from_unixtime(unixreviewtime)) = 2005
+and month(from_unixtime(unixreviewtime)) = 2
+and helpful[1] != 0;
+## 0.13627330849137587
+
+
+
+# 3. 75th percentile of length of review
+select percentile(size(split(reviewtext, ' ')), 0.75)
+from electronics_columns_s3
+where year(from_unixtime(unixreviewtime)) = 2005
+and month(from_unixtime(unixreviewtime)) = 10;
+## 254.75 ~ 255
+
+
+
+# 4.1 average rating of long reviews
+select avg(overall)
+from electronics_columns_s3
+where year(from_unixtime(unixreviewtime)) = 2005
+and size(split(reviewtext, ' ')) >=255
+## 4.076030412164866
+
+# 4.2 average rating of short reviews
+select avg(overall)
+from electronics_columns_s3
+where year(from_unixtime(unixreviewtime)) = 2005
+and size(split(reviewtext, ' ')) < 255
+##3.8572629219778682
+
+
+
+
+
